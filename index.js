@@ -4,7 +4,9 @@ const cors = require('cors');
 const mongoose = require("mongoose");
 const authRouter = require("./routes/auth");
 const mywalletRouter = require("./routes/mywallet");
-const myTransactionRouter = require("./routes/transaction");
+const transactionRouter = require("./routes/transaction");
+
+
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -12,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(authRouter);
 app.use(mywalletRouter);
-app.use(myTransactionRouter);
+app.use(transactionRouter);
 
 
 const DB = "mongodb+srv://buchimain:N3RzSPCPwMtpfU7o@cluster0.o8pfpye.mongodb.net/";

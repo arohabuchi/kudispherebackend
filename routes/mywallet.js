@@ -1,5 +1,5 @@
 const express = require("express");
-const MyWallet = require("../models/myWallet");
+const MyWallet = require("../models/wallet");
 const mywalletRouter = express.Router();
 
 mywalletRouter.post("/api/mywallet", async (req, res) => {
