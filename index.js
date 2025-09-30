@@ -34,7 +34,7 @@ app.use('/api', adminBankRoute)
 
 
 
- /  "mongodb://localhost:27017"
+ //  "mongodb://localhost:27017"
 const DB = process.env.DBConnection;
 
 mongoose
