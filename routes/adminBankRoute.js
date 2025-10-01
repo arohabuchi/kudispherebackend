@@ -14,7 +14,6 @@ const checkAdminRole = (req, res, next) => {
         res.status(403).json({ error: 'Access denied. Admin role required.' });
     }
 };
-
 // ✅ CREATE bank detail (Admin only)
 adminBankRoute.post("/admin/bank-details", checkAdminRole, async (req, res) => {
   try {
@@ -40,8 +39,6 @@ adminBankRoute.post("/admin/bank-details", checkAdminRole, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-
-
 // ✅ Get the very first AdminBankDetail document
 adminBankRoute.get("/admin/bank-details/first", async (req, res) => {
   try {
@@ -58,22 +55,18 @@ adminBankRoute.get("/admin/bank-details/first", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-
-
 // ✅ GET all bank details (Admin only)
-adminBankRoute.get("/api/admin/bank-details", checkAdminRole, async (req, res) => {
-  try {
-    const details = await AdminBankDetail.find().populate("userId", "name email role");
-    res.status(200).json(details);
-  } catch (err) {
-    console.error("Fetch AdminBankDetails error:", err.message);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-
+// adminBankRoute.get("/api/admin/bank-details", checkAdminRole, async (req, res) => {
+//   try {
+//     const details = await AdminBankDetail.find().populate("userId", "name email role");
+//     res.status(200).json(details);
+//   } catch (err) {
+//     console.error("Fetch AdminBankDetails error:", err.message);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
 // ✅ GET single bank detail by ID (Admin only)
-adminBankRoute.get("/api/admin/bank-details/:id", checkAdminRole, async (req, res) => {
+adminBankRoute.get("/admin/bank-details/:id", checkAdminRole, async (req, res) => {
   try {
     const detail = await AdminBankDetail.findById(req.params.id).populate("userId", "name email role");
     if (!detail) {
@@ -85,10 +78,8 @@ adminBankRoute.get("/api/admin/bank-details/:id", checkAdminRole, async (req, re
     res.status(500).json({ error: "Server error" });
   }
 });
-
-
 // ✅ UPDATE bank detail by ID (Admin only)
-adminBankRoute.put("/api/admin/bank-details/:id", checkAdminRole, async (req, res) => {
+adminBankRoute.put("/admin/bank-details/:id", checkAdminRole, async (req, res) => {
   try {
     const { bankDetails } = req.body;
 
@@ -111,10 +102,8 @@ adminBankRoute.put("/api/admin/bank-details/:id", checkAdminRole, async (req, re
     res.status(500).json({ error: "Server error" });
   }
 });
-
-
 // ✅ DELETE bank detail by ID (Admin only)
-adminBankRoute.delete("/api/admin/bank-details/:id", checkAdminRole, async (req, res) => {
+adminBankRoute.delete("/admin/bank-details/:id", checkAdminRole, async (req, res) => {
   try {
     const deletedDetail = await AdminBankDetail.findByIdAndDelete(req.params.id);
     if (!deletedDetail) {

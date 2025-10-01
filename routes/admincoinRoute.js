@@ -71,6 +71,15 @@ imageRouter.get("/api/images/coin-types", async (req, res) => {
     }
 });
 
+// GET endpoint to fetch all coins (all images)
+imageRouter.get("/api/images/all", async (req, res) => {
+    try {
+        const images = await ImageModel.find(); // Fetch all documents
+        res.json(images);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
 
 // POST endpoint to upload a new image
 imageRouter.post("/api/images", upload.single('testImage'), async (req, res) => {
@@ -132,7 +141,7 @@ imageRouter.get("/api/images/:id", async (req, res) => {
 });
 
 // PUT endpoint to update an existing image
-imageRouter.put("/api/images/:id", upload.single('testImage'), async (req, res) => {
+imageRouter.put("/images/:id", upload.single('testImage'), async (req, res) => {
     try {
         const updates = req.body;
         if (req.file) {
