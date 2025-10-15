@@ -18,7 +18,13 @@ const PORT = process.env.PORT || 8000;
 const app = express();
 // app.use(cors());
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://kudispherebackend.vercel.app', 'https://kudisphere.buzz'],
+  origin: [
+    'http://localhost:5173', 
+    'https://kudispherebackend.vercel.app',
+    'https://www.kudispherebackend.vercel.app', 
+    'https://kudisphere.buzz', 
+    'https://www.kudisphere.buzz' // ✅ Add the 'www' version
+],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type',  "x-auth-token", "Authorization"],
 }));
