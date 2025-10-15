@@ -50,7 +50,7 @@ const transactionSchema = new Schema({
             },
             amountToReceive: {////  transactionHash  cryptoAddress  coinType   amountToReceive  amount
             type: Number,
-            required: false,
+            required: true,
             min: 0
         },
         },
