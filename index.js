@@ -16,7 +16,20 @@ const adminBankRoute = require("./routes/adminBankRoute");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://kudisphere.buzz'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type',  "x-auth-token", "Authorization"],
+}));
+// --- Handle CORS Preflight Requests Globally ---
+app.options('*', (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, x-auth-token, Authorization");
+  return res.sendStatus(200);
+});
+
 app.use(express.json());
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

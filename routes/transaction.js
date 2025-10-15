@@ -215,7 +215,7 @@ transactionRoute.post('/:userId/withdraw/bank', findUserMiddleware, checkUserOwn
 // GET /transactions/:userId
 // Endpoint to get all transactions for a specific user.
 // Users can only view their own transactions. Admins can view any user's transactions.
-transactionRoute.get('/transaction/:userId', findUserMiddleware, checkUserOwnership, async (req, res) => {
+transactionRoute.get('/transaction/:userId', findUserMiddleware, async (req, res) => {
     try {
         const transactions = await Transaction.find({ userId: req.requestedUser._id }).sort({ createdAt: -1 });
         res.status(200).json(transactions);
