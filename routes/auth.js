@@ -204,9 +204,14 @@ authRouter.post("/api/signin", async (req, res) => {
   try {
     const { email, password } = req.body;    
 
-    const user = await User.findOne({ email });
+    // const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(400).json({ msg: "User with this email does not exist!" });
+    }
+    if (!user.password) {
+        // This is unlikely if the user exists, but it provides a safety net
+        return res.status(500).json({ error: "Server configuration error: Password field missing." });
     }
 
     if (!user.isVerified) {
@@ -219,7 +224,13 @@ authRouter.post("/api/signin", async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, "passwordKey");
-    res.json({ token, ...user._doc });
+
+    const userResponse = { ...user._doc };
+    delete userResponse.password;
+
+    res.json({ token, ...userResponse });
+
+    // res.json({ token, ...user._doc });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -251,7 +262,7 @@ authRouter.post("/api/forgot-password", async (req, res) => {
     //// http://localhost:8000/api/forgot-password
     //// /api/reset-password/:token 
     // const resetUrl = `http://localhost:8000/api/reset-password/${resetToken}`;
-    const resetUrl = `http://localhost:5173/forgot-password-reset/${resetToken}`;
+    const resetUrl = `https://kudisphere.buzz/forgot-password-reset/${resetToken}`;
 
     const mailOptions = {
       from: "your_email@gmail.com",
