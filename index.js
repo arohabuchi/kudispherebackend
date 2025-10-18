@@ -19,11 +19,11 @@ const app = express();
 // app.use(cors());
 app.use(cors({
   origin: [
-    'http://localhost:5173', 
-    'https://kudispherebackend.vercel.app',
-    'https://www.kudispherebackend.vercel.app', 
-    'https://kudisphere.buzz', 
-    'https://www.kudisphere.buzz' // ✅ Add the 'www' version
+    `http://localhost:5173`, 
+    `https://kudispherebackend.vercel.app`,
+    `https://www.kudispherebackend.vercel.app`, 
+    `https://kudisphere.buzz`, 
+    `https://www.kudisphere.buzz` // ✅ Add the 'www' version
 ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type',  "x-auth-token", "Authorization"],
@@ -58,7 +58,7 @@ app.use('/api', adminBankRoute)
 const DB = process.env.DBConnection;
 
 mongoose
-  .connect(DB, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(DB, { serverSelectionTimeoutMS: 30000, useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("✅ MongoDB Connection Successful");
   })
@@ -71,50 +71,50 @@ mongoose
 
 
   
-  // Configure multer for file storage
-  const storage = multer.diskStorage({
-      destination: (req, file, cb) => {
-          cb(null, 'uploads/');
-      },
-      filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-          cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-      }
-  });
-  // Create a file filter function to restrict file types
-  const fileFilter = (req, file, cb) => {
-      // Check the file's mimetype
-      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-          // Accept the file
-          cb(null, true);
-      } else {
-          // Reject the file with an error message
-          cb(null, false);
-      }
-  };
-  const upload = multer({ 
-      storage: storage,
-      fileFilter: fileFilter // Apply the file filter to the multer middleware
-  }).single("testImage");
-  app.post('/upload', (req, res)=>{
-      upload(req, res, (err)=>{
-          if (err) {
-              console.log(err)
-          }
-          else{
-              const newImage =new ImageModel({
-                  name:req.body.name,
-                  image:{
-                      data:req.file.fieldname,
-                      contentType:'image/jpg'
-                  }
-              })
-              newImage.save()
-              .then(()=>res.send('successfully uploaded'))
-              .catch((err) => console.log(err))
-          }
-      })
-  })
+  // // Configure multer for file storage
+  // const storage = multer.diskStorage({
+  //     destination: (req, file, cb) => {
+  //         cb(null, 'uploads/');
+  //     },
+  //     filename: (req, file, cb) => {
+  //         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+  //         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  //     }
+  // });
+  // // Create a file filter function to restrict file types
+  // const fileFilter = (req, file, cb) => {
+  //     // Check the file's mimetype
+  //     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+  //         // Accept the file
+  //         cb(null, true);
+  //     } else {
+  //         // Reject the file with an error message
+  //         cb(null, false);
+  //     }
+  // };
+  // const upload = multer({ 
+  //     storage: storage,
+  //     fileFilter: fileFilter // Apply the file filter to the multer middleware
+  // }).single("testImage");
+  // app.post('/api/images', (req, res)=>{
+  //     upload(req, res, (err)=>{
+  //         if (err) {
+  //             console.log(err)
+  //         }
+  //         else{
+  //             const newImage =new ImageModel({
+  //                 name:req.body.name,
+  //                 image:{
+  //                     data:req.file.fieldname,
+  //                     contentType:'image/jpg'
+  //                 }
+  //             })
+  //             newImage.save()
+  //             .then(()=>res.send('successfully uploaded'))
+  //             .catch((err) => console.log(err))
+  //         }
+  //     })
+  // })
 
 
 
