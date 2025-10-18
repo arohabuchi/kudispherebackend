@@ -47,10 +47,10 @@ app.use(mywalletRouter);
 app.use(imageRouter);
 // app.use(transactionRoute)
 app.use('/api', transactionRoute)
-app.use('/api', adminBankRoute) 
+app.use('/api', adminBankRoute)
 
 
-
+ 
 
 // const AdminCoinAddress = require("./models/adminCoinAddress");
 

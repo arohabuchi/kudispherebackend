@@ -104,28 +104,7 @@ imageRouter.get("/api/images/all", async (req, res) => {
 });
 
 // POST endpoint to upload a new image
-imageRouter.post("/api/images", upload.single('testImage'), async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ msg: "Invalid file type. Only JPEG and PNG are allowed." });
-        }
-        
-        const { name, coinType, currentPrice, gasfee } = req.body;
-        
-        const newImage = new ImageModel({
-            name: name,
-            coinType: coinType,
-            image: req.file.path, // Save the path to the uploaded image
-            currentPrice: currentPrice,
-            gasfee: gasfee
-        });
 
-        await newImage.save();
-        res.status(201).json({ msg: 'Image uploaded successfully!', image: newImage });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-});
 
 // GET endpoint to retrieve all images
 // GET endpoint to fetch the first item by coinType
@@ -181,7 +160,7 @@ imageRouter.put("/images/:id", upload.single('testImage'), async (req, res) => {
         res.status(500).json({ error: e.message });
     }
 });
-
+ 
 // DELETE endpoint to delete an image by its ID
 imageRouter.delete("/api/images/:id", async (req, res) => {
     try {

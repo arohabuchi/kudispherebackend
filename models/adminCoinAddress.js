@@ -43,7 +43,7 @@ module.exports = ImageModel = mongoose.model('imageModel', ImageSchema);
 //     ref: "User",
 //     required: true,
 //   },
-//   barcodeImage: {
+//   barcodeImage: { 
 //     type: String,
 //     required:true,
 //   },
