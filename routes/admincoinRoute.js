@@ -1,40 +1,62 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
-const ImageModel = require("../models/adminCoinAddress"); // Corrected model import
+const fs = require("fs");
+const ImageModel = require("../models/adminCoinAddress");
 
 const imageRouter = express.Router();
 
-// Configure multer for file storage
+// ✅ Ensure uploads folder exists
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
+// ✅ Multer configuration
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // Specify the directory where uploaded files will be stored.
-        // The 'uploads' folder must be created manually in the root directory.
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        // Create a unique filename for the uploaded image.
-        // This prevents naming conflicts and makes filenames predictable.
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
+  },
 });
 
-// Create a file filter function to restrict file types
 const fileFilter = (req, file, cb) => {
-    // Check the file's mimetype
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-        // Accept the file
-        cb(null, true);
-    } else {
-        // Reject the file with an error message
-        cb(null, false);
-    }
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+    cb(null, true);
+  } else {
+    cb(new Error("Invalid file type. Only JPEG and PNG allowed."), false);
+  }
 };
 
-const upload = multer({ 
-    storage: storage,
-    fileFilter: fileFilter // Apply the file filter to the multer middleware
+const upload = multer({ storage, fileFilter });
+
+// ✅ Upload endpoint
+imageRouter.post("/api/images", upload.single("testImage"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ msg: "❌ No image file received." });
+    }
+
+    const { name, coinType, currentPrice, gasfee } = req.body;
+    console.log("REQ BODY:", req.body);
+    console.log("REQ FILE:", req.file);
+
+    const newImage = new ImageModel({
+      name,
+      coinType,
+      image: req.file.path,
+      currentPrice,
+      gasfee,
+    });
+
+    await newImage.save();
+    res.status(201).json({ msg: "✅ Image uploaded successfully!", image: newImage });
+  } catch (error) {
+    console.error("UPLOAD ERROR:", error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // GET endpoint to get a unique list of coin types, case-insensitive
