@@ -18,6 +18,10 @@ const ImageSchema = mongoose.Schema ({
       type: Number,
       required:false
     },
+    warningInfo:{
+      type: String,
+      required:true
+    },
     gasfee:{
       type:Number,
       required:false

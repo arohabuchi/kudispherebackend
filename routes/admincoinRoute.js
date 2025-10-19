@@ -39,7 +39,7 @@ imageRouter.post("/api/images", upload.single("testImage"), async (req, res) => 
       return res.status(400).json({ msg: "❌ No image file received." });
     }
 
-    const { name, coinType, currentPrice, gasfee } = req.body;
+    const { name, coinType, currentPrice, gasfee, warningInfo } = req.body;
     console.log("REQ BODY:", req.body);
     console.log("REQ FILE:", req.file);
 
@@ -49,6 +49,7 @@ imageRouter.post("/api/images", upload.single("testImage"), async (req, res) => 
       image: req.file.path,
       currentPrice,
       gasfee,
+      warningInfo,
     });
 
     await newImage.save();
